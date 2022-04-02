@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="walk.mvc.schedule.model.mapper.ScheduleMapper">
+ 	
+ 	<sql id="selectScheduleSql">
+ 		SELECT  SNO, 
+			    ID, 
+			    S_DATE, 
+			    RDNO,
+			    ROADNM,
+			    AROUND
+		FROM SCHEDULE 
+ 	</sql>
+	
+	<resultMap type="Schedule" id="ScheduleResultMap">
+  		<id property="sno" column="SNO"/>
+  		<result property="title" column="TITLE"/>
+  		<result property="id" column="ID"/>
+  		<result property="s_date" column="S_DATE"/>
+  		<result property="rdNo" column="RDNO"/>
+  		<result property="around" column="AROUND"/>
+  	</resultMap>
+		 	
+  	<resultMap type="Schedule" id="scheduleResultMap2">
+ 		<id property="sno" column="SNO"/>
+ 		<result property="id" column="ID" />
+ 		<result property="s_date" column="S_DATE"/>
+ 		<result property="rdNo" column="RDNO"/>
+ 		<result property="roadNm" column="ROADNM"/>
+ 		<result property="around" column="AROUND"/>
+ 	</resultMap>
+ 	
+ 	<select id="selectAll" resultMap="scheduleResultMap2" parameterType="string">
+ 		<include refid="selectScheduleSql" />
+ 		JOIN ROAD USING(RDNO)
+ 		WHERE ID = #{id} 
+ 	</select>
+ 	
+ 	<delete id="deleteSchedule" parameterType="_int">
+ 		DELETE SCHEDULE 
+ 		WHERE SNO = #{sno} 
+ 	</delete>
+  
+ 	<insert id="insertSchedule" parameterType="walk.mvc.schedule.model.vo.Schedule">
+ 		INSERT INTO SCHEDULE
+ 		VALUES (SEQ_SCHE_NO.NEXTVAL, NULL, #{id}, #{s_date},#{rdNo}, NULL)
+ 	</insert>
+ </mapper>

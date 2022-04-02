@@ -1,0 +1,18 @@
+/* your styles go here */
+
+.footer_design {
+    background-color: rgb(114, 117, 232);
+    padding-top: 2%;
+    padding-left: 5%;
+}
+
+.weather {
+    display: flex;
+    margin: auto;
+}
+
+.weather_img {
+    margin-left: -7%;
+    margin-top: -17%;
+    margin-bottom: -14%;
+}

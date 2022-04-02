@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="walk.mvc.road.model.mapper.RoadMapper">
+  
+  <resultMap id="roadMap" type="Road">
+    <id column="RDNO" property="rdNo"/>
+    <result column="ROADNM" property="roadNm"/>
+    <result column="CRSLENGTH" property="crsLength"/>
+    <result column="RUNTIME" property="runTime"/>
+    <result column="CRS_LEVEL" property="level"/>
+    <result column="INTRO" property="intro"/>
+    <result column="S_LOCATION" property="s_location"/>
+    <result column="F_LOCATION" property="f_location"/>
+    <result column="CIRCLE" property="circle"/>
+    <result column="THEME" property="theme"/>
+    <result column="CRSPIC" property="crsPic"/>
+    <result column="ROUTE" property="route"/>
+    <result column="LIKES" property="likes"/>
+     <result column="MAPX" property="mapx"/>
+      <result column="MAPY" property="mapy"/>
+  </resultMap>
+
+
+  <!-- 길 정보 상세보기 -->
+	<select id="roadInfoByNo" parameterType="int" resultMap="roadMap">
+	SELECT * FROM ROAD WHERE RDNO = #{rdNo}
+	</select>
+
+
+	<!--  메인 기능 추가 부분 -->
+  	<!-- 길 검색 -->
+ 	<select id="searchRoadList" resultMap="roadMap" parameterType="string">
+ 		SELECT RDNO, ROADNM, CRS_LEVEL, RUNTIME, S_LOCATION, CRSLENGTH, CRSPIC FROM ROAD
+ 		WHERE CRS_LEVEL = ${level} AND <![CDATA[RUNTIME BETWEEN ${fTime} AND ${lTime}]]>
+ 			AND S_LOCATION LIKE '%${s_location}%' AND <![CDATA[CRSLENGTH BETWEEN ${fLength} AND ${lLength}]]>
+ 			${roadNm}
+ 	</select>
+ 	
+ 	<!-- 길 전체 리스트 -->
+ 	<select id="allRoadList" resultMap="roadMap">
+ 		SELECT RDNO, ROADNM, CRS_LEVEL, RUNTIME, S_LOCATION, CRSLENGTH, CRSPIC FROM ROAD
+ 	</select>
+ 	
+ 	<!-- 테마 선택 -->
+ 	<select id="themeClick" resultMap="roadMap" parameterType="string">
+ 		SELECT * FROM ROAD WHERE THEME = '${theme}'
+ 	</select>
+ 	
+ 	<!-- 길 카운트 -->
+ 	<select id="roadCount" parameterType="string" resultType="int">
+ 		SELECT COUNT(*) FROM ROAD
+ 		WHERE CRS_LEVEL = ${level} AND <![CDATA[RUNTIME BETWEEN ${fTime} AND ${lTime}]]>
+ 			AND S_LOCATION LIKE '%${s_location}%' AND <![CDATA[CRSLENGTH BETWEEN ${fLength} AND ${lLength}]]>
+ 			${roadNm}
+ 	</select>
+ 	
+ 	<!-- 길 전체 카운트 -->
+ 	<select id="allRoadCount" resultType="int">
+ 		SELECT COUNT(*) FROM ROAD
+ 	</select>
+ 	
+ 	<!-- 테마 카운트  -->
+ 	<select id="themeClickCount" resultType="_int" parameterType="string">
+ 		SELECT COUNT(*) FROM ROAD WHERE THEME = '${theme}'
+ 	</select>
+
+  </mapper>

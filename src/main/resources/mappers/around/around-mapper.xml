@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="walk.mvc.around.model.mapper.AroundMapper">
+  
+  <resultMap type="Around" id="aroundResultMap">
+  <id property="aro_no" column="ARO_NO"/>
+  <result property="rdNo" column="RDNO"/>
+  <result property="shopNm" column="SHOPNM"/>
+  <result property="shopaddr" column="SHOPADDR"/>
+  <result property="mapx" column="MAPX"/>
+  <result property="mapy" column="MAPY"/>
+  </resultMap>
+  
+  <resultMap id="roadMap" type="Road">
+<id column="RDNO" property="rdNo"/>
+<result column="ROADNM" property="roadNm"/>
+<result column="CRSLENGTH" property="crsLength"/>
+<result column="RUNTIME" property="runTime"/>
+<result column="CRS_LEVEL" property="level"/>
+<result column="INTRO" property="intro"/>
+<result column="S_LOCATION" property="s_location"/>
+<result column="F_LOCATION" property="f_location"/>
+<result column="CIRCLE" property="circle"/>
+<result column="THEME" property="theme"/>
+<result column="CRSPIC" property="crsPic"/>
+<result column="ROUTE" property="route"/>
+<result column="LIKES" property="likes"/>
+</resultMap>
+
+  <resultMap type="Schedule" id="ScheduleResultMap">
+  <id property="sno" column="SNO"/>
+  <result property="title" column="TITLE"/>
+  <result property="id" column="ID"/>
+  <result property="s_date" column="S_DATE"/>
+  <result property="rdNo" column="RDNO"/>
+  <result property="around" column="AROUND"/>
+  </resultMap>
+  
+  <resultMap type="AroundScheduleJoin" id="joinMap">
+  <id property="sno" column="SNO"/>
+  <id property="rdNo" column="RDNO"/>
+  <id property="roadNm" column="ROADNM"/>
+  <id property="s_Location" column="S_LOCATION"/>
+  </resultMap>
+  
+ 
+  
+  <!--  검색결과 db에 넣는 쿼리문 -->
+  <insert id="insertAround" parameterType="map">
+  	insert into around values (SEQ_ARO_NO.NEXTVAL, #{rdNo}, #{shopNm}, #{shopAddr}, #{mapx}, #{mapy})
+  </insert>
+  
+  <!-- 검색결과 보여주는 쿼리문 -->
+  <select id="aroundSearchList" parameterType ="string" resultMap="aroundResultMap">
+ 	SELECT * FROM AROUND WHERE SHOPADDR LIKE '%'|| #{aroundAddr} ||'%'
+  </select>
+
+	<select id="aroundSearchListCount" resultType = "_int" parameterType ="string">
+ 	SELECT count(*) FROM AROUND WHERE SHOPADDR LIKE '%'|| #{aroundAddr} ||'%'
+  </select>
+
+	
+
+  <!--  일정에 추가시켜주는 쿼리문 -->
+  <update id="insertS_Around" parameterType="map">
+	update schedule
+	set around = #{shopNm}
+	where sno = #{sno}
+  </update>
+  
+  
+  <!-- 내가 가는 여행지 목록 리스트 출력시켜주기 -->
+  <select id="myTripList" resultMap="joinMap" parameterType="string">
+  SELECT 
+  R.RDNO AS RDNO, R.ROADNM AS ROADNM, 
+  S.SNO AS SNO, R.S_LOCATION AS S_LOCATION 
+  FROM SCHEDULE S INNER JOIN ROAD R ON S.RDNO = R.RDNO
+  WHERE ID = #{id}
+  </select>
+  </mapper>
+  
+  
